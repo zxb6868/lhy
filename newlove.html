@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>更多情话与美图</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      background: radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%);
+      font-family: 'Segoe UI', '微软雅黑', Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      position: relative;
+      overflow-x: hidden;
+    }
+    h2 {
+      color: #fff;
+      margin-top: 40px;
+      margin-bottom: 24px;
+      text-shadow: 2px 2px 12px #fd6585, 0 0 8px #fff8;
+      font-size: 2.2rem;
+      letter-spacing: 2px;
+      font-family: 'Pacifico', 'Segoe Script', '微软雅黑', cursive, sans-serif;
+      background: linear-gradient(90deg, #fd6585 0%, #f6d365 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .img-list {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 32px 24px;
+      max-width: 1100px;
+      margin-bottom: 40px;
+    }
+    .img-list img {
+      width: 260px;
+      height: 180px;
+      object-fit: cover;
+      border-radius: 18px;
+      box-shadow: 0 4px 24px rgba(253,101,133,0.18), 0 2px 8px #fff2;
+      transition: transform 0.3s, box-shadow 0.3s, border 0.3s;
+      background: #fff2;
+      cursor: pointer;
+      border: 3px solid transparent;
+      outline: none;
+    }
+    .img-list img:hover {
+      transform: scale(1.08) rotate(-2deg);
+      box-shadow: 0 8px 32px #fd6585cc, 0 2px 12px #fff4;
+      border: 3px solid #fd6585;
+      filter: drop-shadow(0 0 12px #fd6585cc);
+    }
+    .back-btn {
+      background: linear-gradient(90deg, #fd6585 0%, #f6d365 100%);
+      color: #fff;
+      border: none;
+      border-radius: 30px;
+      padding: 14px 40px;
+      font-size: 1.1rem;
+      cursor: pointer;
+      box-shadow: 0 4px 24px #fd658555, 0 0 0 0 #fd6585;
+      transition: background 0.3s, transform 0.2s, box-shadow 0.3s;
+      margin-bottom: 40px;
+      position: relative;
+      overflow: hidden;
+    }
+    .back-btn:hover {
+      background: linear-gradient(90deg, #f6d365 0%, #fd6585 100%);
+      transform: scale(1.08);
+      box-shadow: 0 8px 32px #fd6585cc, 0 0 16px 4px #fff4;
+    }
+    .back-btn::after {
+      content: '';
+      position: absolute;
+      left: 50%; top: 50%;
+      width: 0; height: 0;
+      background: radial-gradient(circle, #fff8 0%, transparent 80%);
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      transition: width 0.4s, height 0.4s;
+      z-index: 0;
+    }
+    .back-btn:hover::after {
+      width: 120%; height: 120%;
+    }
+    /* 音乐按钮样式 */
+    .music-btn {
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      z-index: 9999;
+      width: 54px;
+      height: 54px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #fd6585 60%, #f6d365 100%);
+      box-shadow: 0 4px 16px #fd658555;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: none;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.2s;
+      outline: none;
+    }
+    .music-btn:hover {
+      background: linear-gradient(135deg, #f6d365 60%, #fd6585 100%);
+      transform: scale(1.08);
+    }
+    .music-btn svg {
+      width: 32px;
+      height: 32px;
+      fill: #fff;
+      pointer-events: none;
+    }
+    /* 自定义弹窗样式 */
+    .modal-mask {
+      position: fixed;
+      left: 0; top: 0; right: 0; bottom: 0;
+      background: rgba(30, 30, 40, 0.45);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      animation: maskIn 0.3s;
+    }
+    @keyframes maskIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    .modal-box {
+      background: rgba(255,255,255,0.85);
+      border-radius: 18px;
+      box-shadow: 0 8px 40px #fd6585cc, 0 2px 12px #fff4;
+      padding: 36px 32px 28px 32px;
+      min-width: 260px;
+      max-width: 90vw;
+      max-height: 70vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+      animation: modalIn 0.3s cubic-bezier(.5,1.5,.5,1);
+      backdrop-filter: blur(8px);
+      border: 2px solid #fd6585aa;
+    }
+    @keyframes modalIn {
+      from { transform: scale(0.7); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+    .modal-msg {
+      color: #fd6585;
+      font-size: 1.3rem;
+      text-align: center;
+      margin-bottom: 10px;
+      letter-spacing: 1px;
+      line-height: 2.1rem;
+      text-shadow: 0 2px 8px #fd658522;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .modal-msg::before {
+      content: '\2764';
+      color: #fd6585;
+      font-size: 1.5rem;
+      margin-right: 6px;
+      filter: drop-shadow(0 0 8px #fd6585cc);
+    }
+    .modal-close {
+      position: absolute;
+      right: 18px;
+      top: 12px;
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      color: #fd6585;
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+    .modal-close:hover {
+      color: #f6d365;
+    }
+    @media (max-width: 600px) {
+      h2 {
+        font-size: 1.2rem;
+        margin-top: 18px;
+        margin-bottom: 12px;
+      }
+      .img-list {
+        gap: 16px 8px;
+        max-width: 100vw;
+      }
+      .img-list img {
+        width: 98vw;
+        max-width: 340px;
+        height: 28vw;
+        min-height: 120px;
+        border-radius: 12px;
+      }
+      .modal-box {
+        min-width: 0;
+        max-width: 96vw;
+        padding: 18px 8px 14px 8px;
+      }
+      .modal-msg {
+        font-size: 1rem;
+        line-height: 1.5rem;
+      }
+      .back-btn {
+        font-size: 1rem;
+        padding: 12px 0;
+        width: 90vw;
+        min-width: 0;
+      }
+      .music-btn {
+        width: 40px;
+        height: 40px;
+        right: 8px;
+        bottom: 8px;
+      }
+      .music-btn svg {
+        width: 22px;
+        height: 22px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h2>小朱和钰宝宝的美好瞬间</h2>
+  <div class="img-list">
+    <img src="images/love1.jpg" alt="love1" onclick="showLoveMsg(0)">
+    <img src="images/love2.jpg" alt="love2" onclick="showLoveMsg(1)">
+    <img src="images/love3.jpg" alt="love3" onclick="showLoveMsg(2)">
+    <img src="images/love4.jpg" alt="love4" onclick="showLoveMsg(3)">
+    <img src="images/love5.jpg" alt="love5" onclick="showLoveMsg(4)">
+    <img src="images/love6.jpg" alt="love6" onclick="showLoveMsg(5)">
+    <img src="images/love7.jpg" alt="love7" onclick="showLoveMsg(6)">
+    <img src="images/love8.jpg" alt="love8" onclick="showLoveMsg(7)">
+    <img src="images/love9.jpg" alt="love9" onclick="showLoveMsg(8)">
+  </div>
+  <button class="back-btn" onclick="window.location.href='daima.html'">返回表白页</button>
+  <audio src="music.mp3" controls autoplay loop style="position:fixed;right:18px;bottom:18px;z-index:9999;width:220px;max-width:90vw;box-shadow:0 4px 16px #fd658555;border-radius:12px;background:#fff8;"></audio>
+  <script>
+    const loveMsgs = [
+      "超级无敌第一大美女宝宝二十一岁啦！！！！",
+      "第一次正式聘用小朱摄影师，也是非常出片啦。",
+      "第一个一百天在武汉！",
+      "在长沙偷偷自拍的小姐姐。",
+      "去外面旅游的宝宝，非常的想你qwq",
+      "宝宝的每一天都很漂亮。",
+      "这次拍照也超级出片，看来要长期聘用小朱咯",
+      "看一次想你一次。",
+      "第二百天压轴！我们会有更多的一百天！"
+    ];
+    function showLoveMsg(idx) {
+      // 移除已有弹窗
+      const old = document.getElementById('modalMask');
+      if (old) old.remove();
+      // 创建遮罩
+      const mask = document.createElement('div');
+      mask.className = 'modal-mask';
+      mask.id = 'modalMask';
+      // 弹窗内容
+      mask.innerHTML = `
+        <div class="modal-box">
+          <button class="modal-close" onclick="document.getElementById('modalMask').remove()">×</button>
+          <div class="modal-msg">${loveMsgs[idx]}</div>
+        </div>
+      `;
+      document.body.appendChild(mask);
+      // 点击遮罩关闭
+      mask.onclick = function(e) {
+        if (e.target === mask) mask.remove();
+      };
+    }
+  </script>
+</body>
+</html> 
